@@ -4,6 +4,12 @@
 	box-sizing: border-box;
 }
 
+@font-face {
+	font-family: "Inter", serif;
+	font-optical-sizing: auto;
+	font-weight: normal;
+	font-style: normal;
+}
 
 * {
 	margin: 0;
@@ -15,6 +21,7 @@ body {
 	background: rgb(34,193,195);
 	background: linear-gradient(339deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
 	display: flex;
+	font-family: "Inter", serif;
 	justify-content: center;
 	min-height: 100vh;
 	width: 100%;
