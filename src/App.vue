@@ -1,90 +1,171 @@
-<template>
-    <div class="wrapper">
-        <h1>Weather App</h1>
-        <p>Check weather in your city</p>
-        <form>
-            <input type="text" placeholder="Type your city..." aria-label="Type your city" />
-            <button type="button">Check</button>
-        </form>
-    </div>
-</template>
-
-<style lang="scss" scoped>
-@use "@/assets/scss/styles" as *;
-
-.wrapper {
-    background-color: #FFFFFF;
-    border-radius: 24px;
-    box-shadow: 0 40px 32px -32px #0F0F0F29;
-    color: #1D1D1D;
-    height: 500px;
-    padding: 20px;
-    text-align: center;
-    width: 640px;
-
-    h1 {
-        font-size: 36px;
-        margin-top: 50px;
+<script>
+export default {
+  data() {
+    return {
+      title: 'Todo list',
+      placeholderString: 'Add some task',
+      inputValue: '',
+      notes: []
     }
+  },
+  methods: {
+    //changed, while I use v-model="inputValue"
 
-    p {
-        font-size: 16px;
-        margin-top: 20px;
+    // inputChangeHandler(event) {
+    //   this.inputValue = event.target.value;
+    // },
+    addNote() {
+      if (this.inputValue !== '') {
+        this.notes.push(this.inputValue)
+        this.inputValue = ''
+      }
+    },
+    removeNote(idx) {
+      this.notes.splice(idx, 1)
+    },
+    toUppercase(item) {
+      return item.toUpperCase();
     }
-
-    form {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        margin: 0 100px;
+  },
+  computed: {
+    doubleCountComputed() {
+      return this.notes.length * 2
     }
-
-    input {
-        background-color: #FFFFFF;
-        border: 1px solid #CFCFCF;
-        border-radius: 8px;
-        caret-color: #1D1D1D;
-        color: #1D1D1D;
-        font-size: 16px;
-        line-height: 1.25;
-        padding: 15px;
-        margin-top: 30px;
-        transition: border-color .3s;
-        width: 100%;
-
-        &:hover,
-        &:focus {
-            border-color: #1C1D1F;
-        }
+  },
+  watch: {
+    inputValue(value) {
+      if (value.length > 10) {
+        this.inputValue = ''
+      }
     }
-
-    button {
-        appearance: none;
-        cursor: pointer;
-        border: none;
-        background-color: #5280FF;
-        color: #FFFFFF;
-        border-radius: 8px;
-        font-size: 16px;
-        line-height: 1.15;
-        margin-top: 40px;
-        padding: 15px 25px;
-        width: 100%;
-        transition: background .3s, transform .3s, filter .3s;
-
-        &:hover {
-            filter: brightness(92%);
-        }
-
-        &:active {
-            transform: scale(0.96);
-        }
-    }
+  }
 }
 
-</style>
-
-<script>
-
 </script>
+
+<template>
+  <div class="container">
+    <div class="card">
+      <h1 :style="{
+        color: inputValue.length < 5 ? 'darkred' : 'darkblue',
+        fontSize: inputValue.length < 6 ? '2rem' : '4rem'}">{{ title }}</h1>
+      <div class="form-control">
+        <input type="text" name="" id=""
+               :placeholder="placeholderString"
+               v-model="inputValue"
+               @keyup.enter="addNote"
+        />
+        <button type="button" class="btn primary" @click="addNote">Add</button>
+        <hr/>
+      </div>
+      <ul class="list" v-if="notes.length !== 0">
+        <li class="list-item" v-for="(item, idx) in notes">
+<!--SOME VATIANTS HOW TO USE CLASSES-->
+<!--          <span :class="item.length > 5 ? 'primary' : 'bold'">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+<!--          <span :class="{-->
+<!--            'primary': true,-->
+<!--            'bold': item.length > 5-->
+<!--          }">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+<!--          <span :class="['bold', {'primary': item.length > 5}]">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+          {{idx + 1}}) {{toUppercase(item)}}
+          <button type="button" class="btn danger" @click="removeNote(idx, $event)">Delete</button>
+        </li>
+        <li class="list-item">
+          <strong>Common quantity: {{notes.length}} | Doubled: {{doubleCountComputed}}</strong>
+        </li>
+      </ul>
+      <div v-else>No Notes! Add one.</div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+  .container {
+    background-color: #2c3e50;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .card:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  .form-control {
+    display: flex;
+    flex-direction: column;
+  }
+
+  h3 {
+    font-weight: lighter;
+  }
+
+  .btn {
+    align-items: center;
+    appearance: none;
+    border: none;
+    border-radius:8px;
+    display: flex;
+    align-self: flex-start;
+    font-size: 18px;
+    line-height: 1.15;
+    padding: 13px 16px;
+    text-align: center;
+    transition: background-color .3s, color .3s, box-shadow .3s;
+    justify-content: center;
+  }
+
+  .btn:hover {
+    cursor: pointer;
+  }
+
+  .btn.primary {
+    background-color: #5280FF;
+  }
+
+  .btn.primary:hover {
+    background-color: #265ef9;
+  }
+
+  .btn.danger {
+    background-color: darkseagreen;
+  }
+
+  .btn.danger:hover {
+    background-color: #75bd75;
+  }
+
+  input {
+    font-size: 18px;
+    border: 4px solid #5280FF;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .list {
+    padding-left: 0;
+    list-style: unset;
+    appearance: none;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+
+  .list-item:not(:first-child) {
+    border-top: 1px solid black;
+  }
+
+
+</style>
