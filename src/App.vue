@@ -23,6 +23,9 @@ export default {
     removeNote(idx) {
       this.notes.splice(idx, 1)
     },
+    removeAllNotes() {
+      this.notes = []
+    },
     toUppercase(item) {
       return item.toUpperCase();
     }
@@ -46,9 +49,7 @@ export default {
 <template>
   <div class="container">
     <div class="card">
-      <h1 :style="{
-        color: inputValue.length < 5 ? 'darkred' : 'darkblue',
-        fontSize: inputValue.length < 6 ? '2rem' : '4rem'}">{{ title }}</h1>
+      <h1>{{ title }}</h1>
       <div class="form-control">
         <input type="text" name="" id=""
                :placeholder="placeholderString"
@@ -70,10 +71,12 @@ export default {
           {{idx + 1}}) {{toUppercase(item)}}
           <button type="button" class="btn danger" @click="removeNote(idx, $event)">Delete</button>
         </li>
-        <li class="list-item">
-          <strong>Common quantity: {{notes.length}} | Doubled: {{doubleCountComputed}}</strong>
-        </li>
       </ul>
+      <div class="card-statistic" v-if="notes.length !== 0">
+        <strong>Common quantity: {{notes.length}} | Doubled: {{doubleCountComputed}}</strong>
+        <button type="button" class="btn danger" @click="removeAllNotes()">Delete all</button>
+      </div>
+
       <div v-else>No Notes! Add one.</div>
     </div>
   </div>
@@ -167,5 +170,10 @@ export default {
     border-top: 1px solid black;
   }
 
+  .card-statistic {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
 
 </style>
