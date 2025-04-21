@@ -1,5 +1,5 @@
 {
-  "name": "vue-weather",
+  "name": "vue-project",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,10 +12,8 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "sass": "^1.83.4",
-    "sass-loader": "^16.0.4",
-    "vite": "^6.0.5",
-    "vite-plugin-vue-devtools": "^7.6.8"
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2"
   }
 }

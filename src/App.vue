@@ -49,6 +49,7 @@ export default {
 <template>
   <div class="container">
     <div class="card">
+
       <h1>{{ title }}</h1>
       <div class="form-control">
         <input type="text" name="" id=""
@@ -169,7 +170,7 @@ export default {
   .list-item:not(:first-child) {
     border-top: 1px solid black;
   }
-
+  
   .card-statistic {
     align-items: center;
     display: flex;
