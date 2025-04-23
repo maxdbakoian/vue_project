@@ -1,55 +1,44 @@
-<script>
-export default {
-  data() {
-    return {
-      title: 'Todo list',
-      placeholderString: 'Add some task',
-      inputValue: '',
-      notes: []
-    }
-  },
-  methods: {
-    //changed, while I use v-model="inputValue"
+<script setup>
+import {ref, computed, watch} from 'vue';
+const title = ref('Todo list');
+const placeholderString = ref('Add some task');
+const inputValue = ref('');
+const notes = ref([]);
 
-    // inputChangeHandler(event) {
-    //   this.inputValue = event.target.value;
-    // },
-    addNote() {
-      if (this.inputValue !== '') {
-        this.notes.push(this.inputValue)
-        this.inputValue = ''
-      }
-    },
-    removeNote(idx) {
-      this.notes.splice(idx, 1)
-    },
-    removeAllNotes() {
-      this.notes = []
-    },
-    toUppercase(item) {
-      return item.toUpperCase();
-    }
-  },
-  computed: {
-    doubleCountComputed() {
-      return this.notes.length * 2
-    }
-  },
-  watch: {
-    inputValue(value) {
-      if (value.length > 10) {
-        this.inputValue = ''
-      }
-    }
+
+const addNote =() => {
+  if (inputValue.value !== '') {
+    notes.value.push(inputValue.value)
+    inputValue.value = ''
   }
-}
+};
 
+const removeNote = (idx) => {
+  notes.value.splice(idx, 1)
+};
+
+const removeAllNotes = () => {
+  notes.value = []
+};
+
+const toUppercase = (item) => {
+  return item.toUpperCase();
+};
+
+const doubleCountComputed = computed(() => {
+  return notes.value.length * 2
+});
+
+watch(inputValue, (newValue) => {
+  if (newValue?.length > 20) {
+    inputValue.value = ''
+  }
+});
 </script>
 
 <template>
   <div class="container">
     <div class="card">
-
       <h1>{{ title }}</h1>
       <div class="form-control">
         <input type="text" name="" id=""
@@ -57,27 +46,36 @@ export default {
                v-model="inputValue"
                @keyup.enter="addNote"
         />
-        <button type="button" class="btn primary" @click="addNote">Add</button>
-        <hr/>
+        <button type="button"
+                class="btn primary"
+                @click="addNote">Add</button>
       </div>
-      <ul class="list" v-if="notes.length !== 0">
-        <li class="list-item" v-for="(item, idx) in notes">
-<!--SOME VATIANTS HOW TO USE CLASSES-->
-<!--          <span :class="item.length > 5 ? 'primary' : 'bold'">({{idx + 1}}) {{toUppercase(item)}}</span>-->
-<!--          <span :class="{-->
-<!--            'primary': true,-->
-<!--            'bold': item.length > 5-->
-<!--          }">({{idx + 1}}) {{toUppercase(item)}}</span>-->
-<!--          <span :class="['bold', {'primary': item.length > 5}]">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+      <ul class="list"
+          v-if="notes.length !== 0">
+        <li class="list-item"
+            v-for="(item, idx) in notes"
+            :key="idx">
           {{idx + 1}}) {{toUppercase(item)}}
-          <button type="button" class="btn danger" @click="removeNote(idx, $event)">Delete</button>
+          <button type="button"
+                  class="btn danger"
+                  @click="removeNote(idx, $event)">Delete</button>
+
+          <!--SOME VATIANTS HOW TO USE CLASSES-->
+          <!--          <span :class="item.length > 5 ? 'primary' : 'bold'">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+          <!--          <span :class="{-->
+          <!--            'primary': true,-->
+          <!--            'bold': item.length > 5-->
+          <!--          }">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+          <!--          <span :class="['bold', {'primary': item.length > 5}]">({{idx + 1}}) {{toUppercase(item)}}</span>-->
+
         </li>
       </ul>
       <div class="card-statistic" v-if="notes.length !== 0">
         <strong>Common quantity: {{notes.length}} | Doubled: {{doubleCountComputed}}</strong>
-        <button type="button" class="btn danger" @click="removeAllNotes()">Delete all</button>
+        <button type="button"
+                class="btn danger"
+                @click="removeAllNotes()">Delete all</button>
       </div>
-
       <div v-else>No Notes! Add one.</div>
     </div>
   </div>
@@ -104,7 +102,8 @@ export default {
 
   .form-control {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    column-gap: 16px;
   }
 
   h3 {
@@ -139,11 +138,11 @@ export default {
   }
 
   .btn.danger {
-    background-color: darkseagreen;
+    background-color: #ff2c2c;
   }
 
   .btn.danger:hover {
-    background-color: #75bd75;
+    background-color: #e52525;
   }
 
   input {
@@ -152,6 +151,7 @@ export default {
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 10px;
+    width: 100%;
   }
 
   .list {
