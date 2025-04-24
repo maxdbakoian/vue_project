@@ -7,8 +7,12 @@ const notes = ref([]);
 
 
 const addNote =() => {
-  if (inputValue.value !== '') {
-    notes.value.push(inputValue.value)
+  const value = String(inputValue.value);
+  if (value.trim()) {
+    notes.value.push({
+      text: value.trim(),
+      completed: false
+    })
     inputValue.value = ''
   }
 };
@@ -21,13 +25,13 @@ const removeAllNotes = () => {
   notes.value = []
 };
 
-const toUppercase = (item) => {
-  return item.toUpperCase();
-};
+const toggleCompleted = (idx) => {
+  notes.value[idx].completed = !notes.value[idx].completed;
+}
 
-const doubleCountComputed = computed(() => {
-  return notes.value.length * 2
-});
+const toUppercase = (item) => {
+  return item.text.toUpperCase();
+};
 
 watch(inputValue, (newValue) => {
   if (newValue?.length > 20) {
@@ -55,10 +59,17 @@ watch(inputValue, (newValue) => {
         <li class="list-item"
             v-for="(item, idx) in notes"
             :key="idx">
-          {{idx + 1}}) {{toUppercase(item)}}
-          <button type="button"
-                  class="btn danger"
-                  @click="removeNote(idx, $event)">Delete</button>
+          <span :class="{completed: item.completed}">
+            {{idx + 1}}) {{toUppercase(item)}}
+          </span>
+          <div class="button-group">
+            <button type="button"
+                    class="btn primary"
+                    @click="toggleCompleted(idx)">{{ item.completed ? 'Undo' : 'Done' }}</button>
+            <button type="button"
+                    :class="['btn', 'danger']"
+                    @click="removeNote(idx, $event)">Delete</button>
+          </div>
 
           <!--SOME VATIANTS HOW TO USE CLASSES-->
           <!--          <span :class="item.length > 5 ? 'primary' : 'bold'">({{idx + 1}}) {{toUppercase(item)}}</span>-->
@@ -71,10 +82,10 @@ watch(inputValue, (newValue) => {
         </li>
       </ul>
       <div class="card-statistic" v-if="notes.length !== 0">
-        <strong>Common quantity: {{notes.length}} | Doubled: {{doubleCountComputed}}</strong>
+        <strong>Common quantity: {{notes.length}}</strong>
         <button type="button"
                 class="btn danger"
-                @click="removeAllNotes()">Delete all</button>
+                @click="removeAllNotes">Delete all</button>
       </div>
       <div v-else>No Notes! Add one.</div>
     </div>
@@ -112,6 +123,7 @@ watch(inputValue, (newValue) => {
 
   .btn {
     align-items: center;
+    color: #000;
     appearance: none;
     border: none;
     border-radius:8px;
@@ -123,6 +135,13 @@ watch(inputValue, (newValue) => {
     text-align: center;
     transition: background-color .3s, color .3s, box-shadow .3s;
     justify-content: center;
+    text-decoration: none;
+  }
+
+  .completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+    background-color: #f0f0f0;
   }
 
   .btn:hover {
@@ -143,6 +162,15 @@ watch(inputValue, (newValue) => {
 
   .btn.danger:hover {
     background-color: #e52525;
+  }
+
+  .button-group {
+    display: flex;
+    column-gap: 16px;
+
+    .btn {
+      font-size: 14px;
+    }
   }
 
   input {
