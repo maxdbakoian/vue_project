@@ -1,10 +1,30 @@
 <script setup>
-import {ref, watch, onMounted} from 'vue';
+import {ref, watch, onMounted, computed} from 'vue';
 const title = ref('Todo list');
 const placeholderString = ref('Add some task');
 const inputValue = ref('');
 const notes = ref([]);
 
+const navTitle = ref('Vue learning plan');
+const currentStep = ref(0);
+const steps = [
+  {
+    title: "Basics",
+    description: "Only Basics"},
+  {
+    title: "Components",
+    description: "Only Components"},
+  {
+    title: "Router",
+    description: "Only Router"},
+  {
+    title: "Vuex",
+    description: "Only Vuex"},
+  {
+    title: "Composition",
+    description: "Only Composition"
+  },
+];
 
 // Load data on mount of component
 onMounted(() => {
@@ -61,6 +81,20 @@ watch(inputValue, (newValue) => {
     inputValue.value = ''
   }
 });
+
+const currentDescr = computed(() => steps[currentStep.value].description);
+
+const next = () => {
+  if(currentStep.value < steps.length - 1) {
+    currentStep.value++
+  }
+}
+
+const prev = () => {
+  if(currentStep.value > 0) {
+    currentStep.value--
+  }
+}
 </script>
 
 <template>
@@ -102,6 +136,29 @@ watch(inputValue, (newValue) => {
                 @click="removeAllNotes">Delete all</button>
       </div>
       <div v-else>No Notes! Add one.</div>
+    </div>
+    <div class="card">
+      <h1>{{ navTitle }}</h1>
+      <p class="description">{{currentDescr}}</p>
+      <div class="nav-wrapper">
+        <nav class="nav">
+          <ul class="nav-list">
+            <li class="nav-item"
+            v-for="(step, i) in steps"
+            key="i"
+            :class="{active: i === currentStep}"
+            @click="()=> currentStep = i">
+              <a href="#" class="nav-link">{{step.title}}</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="button-group">
+          <button type="button" :class="['btn', 'danger', {disabled: currentStep === 0}]"
+          @click="prev">Back</button>
+          <button type="button" class="btn primary"
+          @click="next">Next</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -254,4 +311,28 @@ watch(inputValue, (newValue) => {
     color: #1c1e21;
   }
 
+  .nav-list {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 0;
+  }
+
+  .nav-item {
+    list-style: none;
+  }
+
+  .active {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .nav-link {
+    color: black;
+    text-decoration: none;
+  }
 </style>
